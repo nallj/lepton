@@ -1,0 +1,145 @@
+
+tgff file: simple_example/simple.tgff
+drachma app file: simple_example/random.app
+
+# TODO: may be 'random' or 'least cost'.  set to 'random' by default if not otherwise specified.
+#region to ip mapping: random
+
+# latency dictates how long an ip takes on average (in clock cycles)  to complete a task.
+# tolerance is how far a task on the ip could potentially change based on increase/decrease in task complexity.
+ip0 latency: 100
+ip0 upper tolerance: 10
+ip0 lower tolerance: 5
+
+ip1 latency: 100
+ip1 upper tolerance: 10
+ip1 lower tolerance: 5
+
+ip2 latency: 100
+ip2 upper tolerance: 10
+ip2 lower tolerance: 5
+
+ip3 latency: 100
+ip3 upper tolerance: 10
+ip3 lower tolerance: 5
+
+ip4 latency: 100
+ip4 upper tolerance: 10
+ip4 lower tolerance: 5
+
+ip5 latency: 100
+ip5 upper tolerance: 10
+ip5 lower tolerance: 5
+
+ip6 latency: 100
+ip6 upper tolerance: 10
+ip6 lower tolerance: 5
+
+ip7 latency: 100
+ip7 upper tolerance: 10
+ip7 lower tolerance: 5
+
+ip8 latency: 100
+ip8 upper tolerance: 10
+ip8 lower tolerance: 5
+
+ip9 latency: 100
+ip9 upper tolerance: 10
+ip9 lower tolerance: 5
+
+ip10 latency: 100
+ip10 upper tolerance: 10
+ip10 lower tolerance: 5
+
+ip11 latency: 100
+ip11 upper tolerance: 10
+ip11 lower tolerance: 5
+
+ip12 latency: 100
+ip12 upper tolerance: 10
+ip12 lower tolerance: 5
+
+ip13 latency: 100
+ip13 upper tolerance: 10
+ip13 lower tolerance: 5
+
+ip14 latency: 100
+ip14 upper tolerance: 10
+ip14 lower tolerance: 5
+
+
+# static regions
+
+# sr 0
+sr0 module 0: ip9
+sr0 module 1: ip8
+
+# sr 1
+sr1 module 0: ip8
+
+
+# reconfigurable regions
+# each line illustrates a module matched to a region (and the IPs present in that module)
+
+# rr0
+rr0 module 0: { ip0, ip1 }
+rr0 module 1: { ip1, ip2 }
+rr0 module 2: { ip2, ip3, ip1 }
+rr0 module 3: { ip4, ip5 }
+rr0 module 4: { ip1, ip4, ip2 }
+
+# rr1
+rr1 module 0: { ip6, ip7 }
+rr1 module 1: { ip8, ip9 }
+rr1 module 2: { ip6, ip7, ip8 }
+rr1 module 3: { ip7, ip8 }
+
+# rr2
+rr2 module 0: { ip9, ip10 }
+rr2 module 1: { ip10, ip11 }
+rr2 module 2: { ip9, ip11 }
+
+# rr3
+rr3 module 0: { ip11, ip12 }
+rr3 module 1: { ip11, ip13 }
+
+# rr4
+rr4 module 0: { ip13, ip14 }
+rr4 module 1: { ip11, ip14 }
+
+
+
+
+
+
+
+###### TODO SECTION ######
+
+# rr bitstream sizes (in bits)
+# rr0 bitstream size: 505
+# rr1 bitstream size: 424
+# rr2 bitstream size: 128
+# rr3 bitstream size: 64
+# rr4 bitstream size: 64
+
+# clock region speeds (in Mhz)
+# cr0: 100.00
+# cr1: 50.00
+# cr2: 33.33
+
+# associate each region with a clock region
+# cr0 regions: { sr0, sr1 }
+# cr1 regions: { rr2, rr3, rr4 }
+# cr2 regions: { rr0, rr1 }
+
+# the frequency of the configuration library controller's clock (in Mhz)
+# config memory speed: 41.66
+# equivalent of 1,333 Mb/s with a 32 bit port (as in DDR3)
+
+# initial region configurations (optional)
+# initial rr0 module: 2
+# initial rr1 module: 2
+# use blank for rr2 (do not uncomment)
+# initial rr3 module: 0
+# initial rr4 module: 1
+
