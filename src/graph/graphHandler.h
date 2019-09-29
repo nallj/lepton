@@ -1,8 +1,9 @@
-#ifndef GRAPH_HANDLER_H
-#define GRAPH_HANDLER_H
+#ifndef LEPTON_GRAPH_HANDLER_H
+#define LEPTON_GRAPH_HANDLER_H
 
 #include <boost/algorithm/string/trim.hpp> // trim
 #include <fstream> // ifstream
+#include <memory> // shared_ptr
 #include <string> // find, getline, string
 #include <vector> // vector
 
@@ -17,12 +18,12 @@
 class graphHandler {
 
 public:
-    std::vector<graph> formGraphsFromTgffFile(const std::string& input_file);
+    std::vector<std::shared_ptr<graph>> formGraphsFromTgffFile(const std::string& input_file);
 
-    void markGraphTasksWithIps(const std::vector<graph>& graphs, unsigned ip_count);
+    void markGraphTasksWithIps(const std::vector<std::shared_ptr<graph>>& graphs, unsigned ip_count);
 
 private:
-    void markGraphTasksWithIpsRecursive(graphNode* node, unsigned ip_count);
+    void markGraphTasksWithIpsRecursive(std::shared_ptr<graphNode> node, unsigned ip_count);
 };
 
 #endif

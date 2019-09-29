@@ -2,6 +2,7 @@
 #define LEPTON_GRAPH_NODE_H
 
 #include <iostream>
+#include <memory> // shared_ptr
 #include <vector>
 
 //#include "applicationTrace.h"
@@ -13,15 +14,15 @@ class graphNode {
 	std::string node_id_;
 	unsigned task_type_id_;
 
-	std::vector<graphNode*> predecessor_nodes_;
-	std::vector<graphNode*> successor_nodes_;
+	std::vector<std::shared_ptr<graphNode>> predecessor_nodes_;
+	std::vector<std::shared_ptr<graphNode>> successor_nodes_;
 
 	unsigned ip_id_;
 	bool mapped_to_rr_else_sr_;
 	unsigned region_id_;
 	bool node_is_mapped_to_region_;
 
-	applicationTrace* corresponding_trace_;
+	std::shared_ptr<applicationTrace> corresponding_trace_;
 
 	unsigned long long beginning_clock_cycle_;
 	int long cycles_remaining_;
@@ -41,12 +42,12 @@ public:
 		task_type_id_ = task_type_id;
 	}
 
-	~graphNode() {
+	// ~graphNode() {
 
-		for (unsigned i = 0; i < successor_nodes_.size(); i++) {
-			delete successor_nodes_.at(i);
-		}
-	}
+	// 	for (unsigned i = 0; i < successor_nodes_.size(); i++) {
+	// 		delete successor_nodes_.at(i);
+	// 	}
+	// }
 
 
 	std::string getNodeId() const { return node_id_; }
@@ -64,17 +65,17 @@ public:
 	void setNodeIsComplete() { node_is_complete_ = true; }
 
 	bool hasPredecessors() const { return !predecessor_nodes_.empty(); }
-	std::vector<graphNode*> getPredecessorNodes() const { return predecessor_nodes_; }
-	void addPredecessorNode(graphNode* predecessor) { predecessor_nodes_.push_back(predecessor); }
+	std::vector<std::shared_ptr<graphNode>> getPredecessorNodes() const { return predecessor_nodes_; }
+	void addPredecessorNode(std::shared_ptr<graphNode> predecessor) { predecessor_nodes_.push_back(predecessor); }
 
-	std::vector<graphNode*> getSuccessorNodes() const { return successor_nodes_; }
-	void addSuccessorNode(graphNode* successor) { successor_nodes_.push_back(successor); }
+	std::vector<std::shared_ptr<graphNode>> getSuccessorNodes() const { return successor_nodes_; }
+	void addSuccessorNode(std::shared_ptr<graphNode> successor) { successor_nodes_.push_back(successor); }
 
-	applicationTrace* getApplicationTrace() const { return corresponding_trace_; }
-	void setApplicationTrace(applicationTrace* corresponding_trace) { corresponding_trace_ = corresponding_trace; }
+	std::shared_ptr<applicationTrace> getApplicationTrace() const { return corresponding_trace_; }
+	void setApplicationTrace(std::shared_ptr<applicationTrace> corresponding_trace) { corresponding_trace_ = corresponding_trace; }
 
 	void setMappedRegion(bool is_rr_else_sr, unsigned region_id);
-	std::vector<applicationTrace*> getDependentApplicationTraces();
+	std::vector<std::shared_ptr<applicationTrace>> getDependentApplicationTraces();
 	void beginExecution(unsigned execution_latency, unsigned long long beginning_clock_cycle);
 	bool allDependenciesSatisfied();
 	int long adjustExecutionLatencyByContextUpdate(unsigned long long current_clock_cycle);

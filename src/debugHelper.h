@@ -20,11 +20,11 @@ struct debugHelper {
     void debugCollectConfigParams(const allParamMaps& all_params) const;
 
     // Debug graphHandler.
-    void debugFormGraphs(const std::vector<graph>& graphs) const;
-    void debugMarkGraphs(const std::vector<graph>& graphs) const;
+    void debugFormGraphs(const std::vector<std::shared_ptr<graph>>& graphs) const;
+    void debugMarkGraphs(const std::vector<std::shared_ptr<graph>>& graphs) const;
 
     // Debug graphMapper.
-    void debugMapRegions(const std::vector<graph>& graphs) const;
+    void debugMapRegions(const std::vector<std::shared_ptr<graph>>& graphs) const;
 
     // Debug moduleHelper.
     void debugIpToRegions(const ip_to_capable_modules_map_t& ip_to_capable_modules_dictionary) const;

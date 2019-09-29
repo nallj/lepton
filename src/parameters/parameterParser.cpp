@@ -3,18 +3,6 @@
 
 
 parsedFileContents parameterParser::parseLeptonSpecificationFile(const std::string& spec_file_path) const {
-// 	// Acceptable parameters from Lepton specification files.
-// 	std::vector<std::string> lepton_simple_params {
-// 		"tgff file",
-// 		"drachma app file"
-// 	};
-// 	std::vector<std::string> lepton_regex_params {
-// 		"\\bip\\d+\\b \\blatency\\b[:] \\d+",
-// 		"\\bip\\d+\\b \\bupper tolerance\\b[:] \\d+",
-// 		"\\bip\\d+\\b \\blower tolerance\\b[:] \\d+",
-// 		"\\bsr\\d+\\b \\bmodule \\d+\\b[:]\\s*ip\\d+",
-// 		"\\brr\\d+\\b \\bmodule \\d+\\b[:]\\s*\\{\\s*ip\\d+\\s*(,\\s*ip\\d+)*\\s*\\}"
-// 	};
 
 	// Read in the Lepton specification file.
 	//auto file_handler = fileReader(spec_file_path, lepton_simple_params, lepton_regex_params);
@@ -33,20 +21,6 @@ parsedFileContents parameterParser::parseLeptonSpecificationFile(const std::stri
 }
 
 regionAndModuleCounts parameterParser::countRegionsAndModules(const std::string& app_file_path) const {
-
-	// Acceptable parameters from Drachma application files.
-	// std::vector<std::string> application_params {
-	// 	"name",
-	// 	"icap width",
-	// 	"icap speed",
-	// 	"prc speed",
-	// 	"static region speed"
-	// };
-	// std::vector<std::string> application_regex {
-	// 	"\\bsr\\d+ \\bmodule count\\b[:] \\d+",
-	// 	"\\brr\\d+\\b \\bbitstream size\\b[:] \\d+",
-	// 	"\\brr\\d+\\b \\bmodule \\d+ speed\\b[:] \\d+[.]\\d{1,2}"
-	// };
 
 	// Read the Drachma application file for how many static/reconfigurable regions will be present.
 	//auto file_handler = fileReader(app_file_path, application_params, application_regex);
@@ -81,8 +55,9 @@ regionAndModuleCounts parameterParser::countRegionsAndModules(const std::string&
 			region_id_plus_1 = region_id + 1;
 
 			// Record count based off of largest static region ID that is found.
-			if (region_id_plus_1 > counts.sr_count_)
+			if (region_id_plus_1 > counts.sr_count_) {
 				counts.sr_count_ = region_id_plus_1;
+			}
 
 			it = counts.sr_module_counts_.begin() + region_id;
 			counts.sr_module_counts_.insert(it, std::stoul(arg));
@@ -98,8 +73,9 @@ regionAndModuleCounts parameterParser::countRegionsAndModules(const std::string&
 			region_id_plus_1 = region_id + 1;
 
 			// Record region count based off of largest reconfigurable region ID that is found.
-			if (region_id_plus_1 > counts.rr_count_)
+			if (region_id_plus_1 > counts.rr_count_) {
 				counts.rr_count_ = region_id_plus_1;
+			}
 
 			// If an entry has not been added for this RR, add one first before proceeding.
 			if (counts.rr_module_counts_.size() < region_id_plus_1) {
@@ -122,8 +98,9 @@ regionAndModuleCounts parameterParser::countRegionsAndModules(const std::string&
 				module_id_plus_1 = module_id + 1;
 
 				// Record module count based off of largest module ID that is found.
-				if (current_rr_module_count < module_id_plus_1)
+				if (current_rr_module_count < module_id_plus_1) {
 					counts.rr_module_counts_.at(region_id) = module_id_plus_1;
+				}
 			}
 		}
 

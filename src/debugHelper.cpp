@@ -42,7 +42,7 @@ void debugHelper::debugCollectConfigParams(const allParamMaps& all_params) const
 
         std::cout << " }\n";
     }
-
+    
     std::cout << "\nTHERE ARE " << ordered_rr_params.size() << " RRs TOTAL with module counts = { ";
     for (auto& entry_it : ordered_rr_params)
         std::cout << entry_it.second.getModuleCount() << ", ";
@@ -55,7 +55,7 @@ void debugHelper::debugCollectConfigParams(const allParamMaps& all_params) const
         const auto& rr_param_it = entry_it.second;
 
         //for (unsigned j = 0; j < rr_param_it.getModuleCount(); j++) {
-        for (const auto& module_it : rr_param_it.getModuleIdToIpIdsMap()) {
+        for (const auto& module_it : rr_param_it._getModuleIdToIpIdsMap()) {
 
             const auto module_id = module_it.first;
             const auto& ip_ids = module_it.second;
@@ -78,7 +78,7 @@ void debugHelper::debugCollectConfigParams(const allParamMaps& all_params) const
               << "\n==============================================================================\n";
 }
 
-void debugHelper::debugFormGraphs(const std::vector<graph>& graphs) const {
+void debugHelper::debugFormGraphs(const std::vector<std::shared_ptr<graph>>& graphs) const {
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_FORM_GRAPHS' Debug Data\n\n";
@@ -88,7 +88,7 @@ void debugHelper::debugFormGraphs(const std::vector<graph>& graphs) const {
         std:: cout << "> This is graph # " << i << " and it has nodes:\n";
 
         const auto& current_graph = graphs.at(i);
-        const auto all_nodes = current_graph.getAllNodes();
+        const auto all_nodes = current_graph->getAllNodes();
 
         for (const auto& node_it : all_nodes) {
             std::cout << "\t" << node_it->getNodeId() << " (type " << node_it->getTaskTypeId() << ")";
@@ -108,7 +108,7 @@ void debugHelper::debugFormGraphs(const std::vector<graph>& graphs) const {
 
         std:: cout << "  And has the following top nodes:\n";
 
-        for (const auto& node_it : current_graph.getAllTopLevelNodes())
+        for (const auto& node_it : current_graph->getAllTopLevelNodes())
             std::cout << "\t" << node_it->getNodeId() << " (" << node_it->getTaskTypeId() << ")\n";
     }
 
@@ -116,7 +116,7 @@ void debugHelper::debugFormGraphs(const std::vector<graph>& graphs) const {
               << "\n==============================================================================\n";
 }
 
-void debugHelper::debugMarkGraphs(const std::vector<graph>& graphs) const {
+void debugHelper::debugMarkGraphs(const std::vector<std::shared_ptr<graph>>& graphs) const {
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_MARK_GRAPHS' Debug Data\n\n";
@@ -125,7 +125,7 @@ void debugHelper::debugMarkGraphs(const std::vector<graph>& graphs) const {
 
         std:: cout << "> This is graph # " << i << " and it has nodes:\n";
 
-        const auto all_nodes = graphs.at(i).getAllNodes();
+        const auto all_nodes = graphs[i]->getAllNodes();
         for (const auto& node_it : all_nodes)
             std::cout << "\t" << node_it->getNodeId() << " (IP" << node_it->getIpId() << ")\n";
     }
@@ -134,7 +134,7 @@ void debugHelper::debugMarkGraphs(const std::vector<graph>& graphs) const {
               << "\n==============================================================================\n";
 }
 
-void debugHelper::debugMapRegions(const std::vector<graph>& graphs) const {
+void debugHelper::debugMapRegions(const std::vector<std::shared_ptr<graph>>& graphs) const {
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_MAP_REGIONS' Debug Data\n\n";
@@ -143,7 +143,7 @@ void debugHelper::debugMapRegions(const std::vector<graph>& graphs) const {
 
         std:: cout << "> This is graph # " << i << " and it has nodes:\n";
 
-        const auto all_nodes = graphs.at(i).getAllNodes();
+        const auto all_nodes = graphs[i]->getAllNodes();
         for (const auto& node_it : all_nodes) {
             std::cout << "\t" << node_it->getNodeId() << " (ip" << node_it->getIpId() << " mapped to ";
 
@@ -157,21 +157,19 @@ void debugHelper::debugMapRegions(const std::vector<graph>& graphs) const {
               << "\n==============================================================================\n";
 }
 
-void debugHelper::debugIpToRegions(const ip_to_capable_modules_map_t& ip_to_capable_modules_dictionary) const {
+void debugHelper::debugIpToRegions(const ip_to_capable_modules_map_t& ip_to_capable_modules_map) const {
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_IP_TO_REGIONS' Debug Data\n\n";
 
     // Print unsigned IP-to-module dictionary contents.
-    for (auto dict_it = ip_to_capable_modules_dictionary.begin(); dict_it != ip_to_capable_modules_dictionary.end(); ++dict_it) {
-        std::cout << "IP" << dict_it->first << " can be used in: { ";
+    for (const auto& dict_it : ip_to_capable_modules_map) {
+        std::cout << "IP" << dict_it.first << " can be used in: { ";
 
-        auto modules = dict_it->second;
-        for (auto vect_it = modules->begin(); vect_it != modules->end(); ++vect_it)
-
-            std::cout << ((*vect_it)->getIsStatic() ? "sr" : "rr")
-                        << (*vect_it)->getRegionId()
-                        << "m" << (*vect_it)->getModuleId() << ", ";
+        for (const auto& module_it : dict_it.second)
+            std::cout << (module_it->getIsStatic() ? "sr" : "rr")
+                      << module_it->getRegionId()
+                      << "m" << module_it->getModuleId() << ", ";
 
         std::cout << "}\n";
     }

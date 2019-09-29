@@ -3,14 +3,18 @@
 # trace files for use with Drachma.
 
 # Written by James B. Nall
-# Copyright (C) 2015-2018, All Rights Reserved
+# Copyright (C) 2015-2019, All Rights Reserved
 
-CC = g++ -std=c++11
+CXX = g++
+CXXFLAGS = -std=c++11 -o
 OBJ = applicationTrace.o availableModule.o fileReader.o graph.o lepton.o graphNode.o mapper.o moduleIterationActions.o parameterParser.o parameters.o
 
+# Ignore the rest of this for now.
 ifeq ("true","false")
 
-all: $(OBJ) lepton
+all: $(OBJ) -o lepton
+
+dev: $(OBJ) -g -o lepton
 
 clean:
 	rm -f *.o
@@ -18,41 +22,41 @@ clean:
 
 
 applicationTrace.o: src/applicationTrace.h src/availableModule.h
-	$(CC) -o $@ $^
+	$(CXX) $@ $^
 
 availableModule.o: src/availableModule.h src/graphNode.h
-	$(CC) -o $@ $^
+	$(CXX) $@ $^
 
 fileReader.o: src/fileReader.h
-	$(CC) -o $@ $<
+	$(CXX) $@ $<
 # -lboost_regex
 
 graph.o: src/graph.h src/graphNode.h
-	$(CC) -o $@ $^
+	$(CXX) $@ $^
 
 graphMapper.o: src/applicationTrace.h src/availableModule.h src/fileReader.h src/graph.h src/graphNode.h src/parameters/parameterParser.h src/parameters/parameters.h src/mapper.h
-	$(CC) -o $@ $^
+	$(CXX) $@ $^
 
 # applicationTrace
 graphNode.o: src/graphNode.h
-	$(CC) -o $@ $<
+	$(CXX) $@ $<
 
 mapper.o: src/applicationTrace.h src/availableModule.h src/fileReader.h src/graph.h src/moduleIterationActions.h src/parameters/parameters.h
-	$(CC) -o $@ $^
+	$(CXX) $@ $^
 
 moduleIterationActions.o: src/availableModule.h src/graphNode.h src/moduleIterationActions.h
-	$(CC) -o $@ $^
+	$(CXX) $@ $^
 
 parameterParser.o: src/parameters/parameterParser.h
-	$(CC) -o $@ $<
+	$(CXX) $@ $<
 
 parameters.o: src/parameters/parameters.h
-	$(CC) -o $@ $<
+	$(CXX) $@ $<
 
 
 lepton: src/main.cpp $(OBJ)
-	$(CC) -c -o $@ $^
-#	cd src; $(CC) -c -o $@ $^
+	$(CXX) -c $@ $^
+#	cd src; $(CXX) -c -o $@ $^
 
 endif
 
@@ -64,7 +68,7 @@ all: src/main.cpp src/applicationTrace.h src/availableModule.h src/debugHelper.h
 	 src/parameters/parameterParser.h src/parameters/parameterParser.cpp src/parameters/parameters.h
 
 	cd src && \
-	g++ -std=c++11 -o lepton main.cpp applicationTrace.h availableModule.h debugHelper.h debugHelper.cpp files/fileReader.h \
+	$(CXX) -g $(CXXFLAGS) ../lepton main.cpp applicationTrace.h availableModule.h debugHelper.h debugHelper.cpp files/fileReader.h \
 	files/fileReader.cpp  files/fileWriter.h files/fileWriter.cpp files/specificFileReaders.h graph/graph.h graph/graphHandler.h \
 	graph/graphHandler.cpp graph/graphMapper.h graph/graphMapper.cpp graph/graphNode.h graph/graphNode.cpp graph/moduleHelper.h \
 	graph/moduleHelper.cpp graph/moduleIterationActions.h graph/moduleIterationActions.cpp parameters/parameterBuilder.h \

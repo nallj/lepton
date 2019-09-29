@@ -1,8 +1,9 @@
 #ifndef LEPTON_AVAILABLE_MODULE_H
 #define LEPTON_AVAILABLE_MODULE_H
 
-#include <memory> // unique_ptr
+#include <memory> // shared_ptr
 #include <sstream>
+#include <string> // string
 #include <unordered_map> // unordered_map
 #include <vector> // vector
 
@@ -10,14 +11,24 @@
 
 class availableModule;
 
-//using ip_to_capable_modules_map_t = std::unordered_multimap<unsigned, std::vector<availableModule*>*>;
-using ip_to_capable_modules_map_t = std::unordered_map<unsigned, std::vector<availableModule*>*>;
-//using region_to_avail_modules_t = std::vector<std::vector<availableModule*>>;
+//using ip_to_capable_modules_map_t = std::unordered_multimap<unsigned, std::vector<std::shared_ptr<availableModule>>>*>;
+using ip_to_capable_modules_map_t = std::unordered_map<unsigned, std::vector<std::shared_ptr<availableModule>>>;
+//using region_to_avail_modules_t = std::vector<std::vector<std::shared_ptr<availableModule>>>>;
 
 // Consider changing to region_to_modules_t.
-using region_to_avail_modules_t = std::unordered_map<unsigned, std::vector<std::unique_ptr<availableModule>>>;
+using region_to_avail_modules_t = std::unordered_map<unsigned, std::vector<std::shared_ptr<availableModule>>>;
 
 class availableModule {
+
+		// Relevant to the operation of the application.
+		bool is_active_;
+		unsigned remaining_latency_;
+		std::shared_ptr<graphNode> current_task_;
+
+		// Used solely for debugging purposes.
+		bool is_static_;
+		unsigned region_id_;
+		unsigned module_id_;
 
 	public:
 		// For reconfigurable region modules.
@@ -31,27 +42,27 @@ class availableModule {
 
 		// Accessors.
 		
-		bool getIsActive() {
+		bool getIsActive() const {
 			return is_active_;
 		}
 		
-		unsigned getRemainingLatency() {
+		unsigned getRemainingLatency() const {
 			return remaining_latency_;
 		}
 
-		graphNode* getCurrentTask() {
+		std::shared_ptr<graphNode> getCurrentTask() const {
 			return current_task_;
 		}
 
-		bool getIsStatic() {
+		bool getIsStatic() const {
 			return is_static_; 
 		}
 
-		unsigned getRegionId() {
+		unsigned getRegionId() const {
 			return region_id_;
 		}
 
-		unsigned getModuleId() {
+		unsigned getModuleId() const {
 			return module_id_;
 		}
 
@@ -66,29 +77,18 @@ class availableModule {
 			remaining_latency_ = remaining_latency;
 		}
 
-		void setCurrentTask(graphNode* current_task) {
+		void setCurrentTask(std::shared_ptr<graphNode> current_task) {
 			current_task_ = current_task;
 		}
 
-		std::string getHumanReadableId() {
+
+		std::string getHumanReadableId() const {
 
 			std::ostringstream o;
 			o << (is_static_ ? "s" : "r") << region_id_ << "m" << module_id_;
 
 			return o.str();
 		}
-
-	private:
-
-		// Relevant to the operation of the application.
-		bool is_active_;
-		unsigned remaining_latency_;
-		graphNode* current_task_;
-
-		// Used solely for debugging purposes.
-		bool is_static_;
-		unsigned region_id_;
-		unsigned module_id_;
 };
 
 #endif

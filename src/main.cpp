@@ -16,7 +16,7 @@
 
 int main(int argc, char** argv) {
 
-	std::cout <<  "\nLepton : Utility program for producing Drachma application traces from TGFF outputs.\n\n\n";
+	std::cout << "\nLepton : Utility program for producing Drachma application traces from TGFF outputs.\n\n\n";
 
 	try {
 
@@ -44,6 +44,8 @@ int main(int argc, char** argv) {
 			//std::vector<srParams> sr_params;
 			//std::vector<rrParams> rr_params;
 
+
+
 			//sr_params_map_t sr_params_map;
 			//rr_params_map_t rr_params_map;
 
@@ -56,7 +58,7 @@ int main(int argc, char** argv) {
 			auto sr_params_map = all_params.sr_params_map;
 			auto rr_params_map = all_params.rr_params_map;
 
-			//std::vector<graph*> graphs;
+			//std::vector<std::shared_ptr<graph>> graphs;
 			auto graph_handler = graphHandler();
 
 			// Get the TGFF file where the graph data is populated.
@@ -74,10 +76,10 @@ int main(int argc, char** argv) {
 
 			// Get region-to-ip mapping approach (either random or lowest cost).
 			auto region_to_ip_mapping_approach = statically_defined_params.find("region to ip mapping");
-			bool use_random_else_least_cost;
+			moduleSelectionType module_selection_method;
 
 			if (region_to_ip_mapping_approach == statically_defined_params.end() || region_to_ip_mapping_approach->second != "least cost") {
-				use_random_else_least_cost = true;
+				module_selection_method = moduleSelectionType::random;
 			}
 
 			/*
@@ -94,14 +96,18 @@ int main(int argc, char** argv) {
 			auto available_sr_modules = module_helper.buildSrToAvailableModuleMap(sr_params_map);
 			auto available_rr_modules = module_helper.buildRrToAvailableModuleMap(rr_params_map);
 
+			ip_to_capable_modules_map_t ip_to_capable_modules_map;
+
 			// Create an IP-to-available module map.
-			auto ip_to_capable_modules_map =
-				module_helper.buildIpToModuleMap(sr_params_map, available_sr_modules, rr_params_map, available_rr_modules);
+			//auto ip_to_capable_modules_map =
+			//	module_helper.buildIpToModuleMaps(sr_params_map, available_sr_modules, rr_params_map, available_rr_modules);
+			module_helper.buildIpToSrModuleMap(sr_params_map, available_sr_modules, ip_to_capable_modules_map);
+			module_helper.buildIpToRrModuleMap(rr_params_map, available_rr_modules, ip_to_capable_modules_map);
 
 			auto graph_mapper = graphMapper(lepton_spec_file_path);
 
 			graph_mapper.mapRegionsToGraphNodesAndProduceTraces(graphs, ip_params_map, available_sr_modules,
-				available_rr_modules, ip_to_capable_modules_map, use_random_else_least_cost);
+				available_rr_modules, ip_to_capable_modules_map, module_selection_method);
 
 		// Too many arguments supplied.
 		} else if (argc > 1) {
@@ -117,6 +123,6 @@ int main(int argc, char** argv) {
 		return EXIT_FAILURE;
 	}
 
-	std::cout << "> DONE!\n\n";
+	std::cout << "\n\n> DONE!\n\n";
 	return EXIT_SUCCESS;
 }

@@ -22,14 +22,18 @@ void fileReader::parseContent() {
 	while (std::getline(in_file, line)) {
 
 		// Handle comment blocks.
-		if (comment_block || (line.length() > 1 && line.at(0) == specialTag::long_comment && line.at(1) == specialTag::comment) ) {
+		if (
+			comment_block ||
+			(line.length() > 1 && line.at(0) == specialTag::long_comment && line.at(1) == specialTag::comment)
+		) {
 
 			// Is this the end of a comment block?
-			if (comment_block && line.length() > 1 && line.at(0) == specialTag::comment && line.at(1) == specialTag::long_comment)
-				comment_block = false;
-
-			else
-				comment_block = true;
+			comment_block = !(
+				comment_block &&
+				line.length() > 1 &&
+				line.at(0) == specialTag::comment &&
+				line.at(1) == specialTag::long_comment
+			);
 
 			file_body_.push_back( std::make_pair(lineType::comment, line) );
 			continue;
@@ -92,8 +96,14 @@ void fileReader::parseEntries() {
 				}
 
 				// Check if acceptable parameter is present.
-				if (std::find(acceptable_params_.begin(), acceptable_params_.end(), test_param) != acceptable_params_.end()
-						&& test_arg.length() != 0) {
+				if (
+					std::find(
+						acceptable_params_.begin(),
+						acceptable_params_.end(),
+						test_param
+					) != acceptable_params_.end()	&&
+					test_arg.length() != 0
+				) {
 
 					// Multimap parameter and value pairs - like a dictionary.
 					std::pair<std::string, std::string> entry(test_param, test_arg);
@@ -103,7 +113,6 @@ void fileReader::parseEntries() {
 					file_body_[i].first = lineType::parameter;
 					continue; 
 				}
-
 			}
 
 			bool pass_regex = false;
@@ -122,8 +131,9 @@ void fileReader::parseEntries() {
 			}
 
 			// Data accepted; next input.
-			if (pass_regex) continue; 
-
+			if (pass_regex) {
+				continue; 
+			}
 
 			// Getting this far means the line contains neither parameter nor data.
 			std::cout << "ERROR: This is not a valid file. <Line#" << i << " is Neither Parameter nor Data>\n\n";
@@ -139,16 +149,18 @@ void fileReader::parseEntries() {
 void fileReader::printEntries() const {
 
 	std::cout << "> PARAMETER MULTIMAP <\n";
-	for (const auto& entry : param_map_)
 
 
-	for (auto& it : param_map_)
+	for (auto& it : param_map_) {
 		std::cout << "MAP: " << it.first << "  \t=>\t" << it.second << "\n";
+	}
 
 	std::cout << "\n> DATA ENTRIES <" << "\n";
-	for (int i = 0; i < file_body_.size(); i++)
-		if (file_body_[i].first == lineType::data)
+	for (int i = 0; i < file_body_.size(); i++) {
+		if (file_body_[i].first == lineType::data) {
 				std::cout << "DATA: " << file_body_[i].second << "\n";
+		}
+	}
 
 }
 
@@ -191,9 +203,11 @@ std::vector<std::string> fileReader::getData() {
 
 	std::vector<std::string> data_body;
 
-	for (unsigned long i = 0; i < file_body_.size(); i++)
-		if (file_body_[i].first == lineType::data)
+	for (unsigned long i = 0; i < file_body_.size(); i++) {
+		if (file_body_[i].first == lineType::data) {
 			data_body.push_back(file_body_[i].second);
+		}
+	}
 
 	return data_body;
 }

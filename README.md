@@ -1,14 +1,24 @@
 # Lepton
+![](https://img.shields.io/github/tag/pandao/editor.md.svg)
 v0.8.0
-Companion tool to the [Drachma](https://github.com/nero777x/pr-cache-sim) simulator.
+
+** Table of Contents **
+* Features
+* Style
+* To-do List
+
+### Features
+
+- Translates a randomly generated task graph from Task Graph For Free (TGFF) into application traces to be used by Drachma.
 
 ### Style
 To the best of the author's ability, this project conforms to the "C++ Core Guidelines" found here <https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md>.  Any exceptions or additional rules may be located within the .styleguide file.
 
-### To-do List
+
+### To-do List     
 * Consider splitting mapper class into mapper/tracer classes or tracer/tracerHelper classes.
-* Persuant to the previous, consider name changes for mapper and graphMapper classes.
-* Replace fileReader class with propper file parsing library.
+* Pursuant to the previous, consider name changes for mapper and graphMapper classes.
+* Replace fileReader class with proper file parsing library.
 * Consider using JSON or something similar as the format for configuration files (research alternatives).
 * Change the .t2d file along with corresponding data structures and logic.
  + Option 1: Latencies no longer on IP (simply list out IPs with no arguments)

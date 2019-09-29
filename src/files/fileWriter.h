@@ -7,7 +7,7 @@
 #include <vector> // vector
 
 class fileWriter {
-    const std::string input_file_;
+  const std::string input_file_;
 
 public:
 	fileWriter(const std::string& input) :
@@ -15,8 +15,8 @@ public:
 
 
 	void deleteIfExists() const {
-        remove(input_file_.c_str());
-    }
+    remove(input_file_.c_str());
+  }
 
 	void addSingleLineToEof(const std::string& line) const;
 	void addMultipleLinesToEof(const std::vector<std::string>& lines) const;

@@ -1,17 +1,13 @@
 #ifndef LEPTON_PARAMETERS_H
 #define LEPTON_PARAMETERS_H
 
+#include <iostream>
 #include <unordered_map>
 #include <vector>
 
 struct ipParams;
 struct srParams;
 struct rrParams;
-
-//typedef std::unordered_map<unsigned, unsigned> sr_module_ip_map_t;
-//typedef std::unordered_map<unsigned, std::vector<unsigned>> rr_module_ip_map_t;
-//typedef std::unordered_map<unsigned, srParams> sr_params_map_t;
-//typedef std::unordered_map<unsigned, rrParams> rr_params_map_t;
 
 using sr_module_ip_map_t = std::unordered_map<unsigned, unsigned>;
 using rr_module_ip_map_t = std::unordered_map<unsigned, std::vector<unsigned>>;
@@ -76,11 +72,31 @@ public:
 
 
 	void assignIpsToModule(unsigned module_id, std::vector<unsigned> ip_ids) {
-		module_id_to_ip_ids_map_[module_id] = ip_ids;
+		
+		//module_id_to_ip_ids_map_[module_id] = ip_ids;
+
+		if (keyInMap(module_id_to_ip_ids_map_, module_id)) {
+
+			std::cout << "   assignIpsToModule ASSIGN " << module_id << " with " << module_id_to_ip_ids_map_.size() << " things\n";
+			module_id_to_ip_ids_map_[module_id] = ip_ids;
+			std::cout << "                now with " << module_id_to_ip_ids_map_.size() << " things\n";
+		} else {
+			std::cout << "   assignIpsToModule NEW " << module_id << " with " << module_id_to_ip_ids_map_.size() << " things\n";
+			module_id_to_ip_ids_map_.insert(std::pair<unsigned, std::vector<unsigned>>(module_id, ip_ids));
+			std::cout << "                now with " << module_id_to_ip_ids_map_.size() << " things\n";
+		}
+
 	}
 
-	void addIpToModule(unsigned module_id, unsigned ip_id) {
-		module_id_to_ip_ids_map_[module_id].push_back(ip_id);
+	void addModuleIpPair(unsigned module_id, unsigned ip_id) {
+
+		if (keyInMap(module_id_to_ip_ids_map_, module_id)) {
+			module_id_to_ip_ids_map_[module_id].push_back(ip_id);
+		} else {
+			auto ip_ids = std::vector<unsigned>();
+			ip_ids.push_back(ip_id);
+			module_id_to_ip_ids_map_.insert(std::pair<unsigned, std::vector<unsigned>>(module_id, ip_ids));
+		}
 	}
 
 	unsigned getModuleCount() const {
@@ -92,9 +108,17 @@ public:
 		return module_id_to_ip_ids_map_.at(module_id);
 	}
 
-	rr_module_ip_map_t getModuleIdToIpIdsMap() const {
+	// Underscored: Consider forbidding use outside of debugging.
+	rr_module_ip_map_t _getModuleIdToIpIdsMap() const {
 		return module_id_to_ip_ids_map_;
 	}
+
+
+	template<typename TKey, typename TVal>
+	bool keyInMap(const std::unordered_map<TKey, TVal>& map, const TKey& key) {
+		return map.find(key) != map.end();
+	}
+
 };
 
 #endif
