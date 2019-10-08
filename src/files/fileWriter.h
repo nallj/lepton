@@ -10,14 +10,9 @@ class fileWriter {
   const std::string input_file_;
 
 public:
-	fileWriter(const std::string& input) :
-		input_file_(input) {}
+	fileWriter(const std::string& input);
 
-
-	void deleteIfExists() const {
-    remove(input_file_.c_str());
-  }
-
+	void deleteIfExists() const;
 	void addSingleLineToEof(const std::string& line) const;
 	void addMultipleLinesToEof(const std::vector<std::string>& lines) const;
 };

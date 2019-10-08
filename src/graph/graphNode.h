@@ -1,14 +1,22 @@
 #ifndef LEPTON_GRAPH_NODE_H
 #define LEPTON_GRAPH_NODE_H
 
+#include <deque>
 #include <iostream>
 #include <memory> // shared_ptr
+#include <unordered_map>
 #include <vector>
 
+// TODO: Is it possible to avoid the circular dependency while still including the file?
 //#include "applicationTrace.h"
 
-// Need to forward declare to avoid circular dependency.
+// Need to forward declare applicationTrace to avoid circular dependency.
 class applicationTrace;
+using traces_t = std::vector<std::shared_ptr<applicationTrace>>;
+
+class graphNode;
+using nodes_list_t = std::deque<std::shared_ptr<graphNode>>;
+using nodes_map_t = std::unordered_map<std::string, std::shared_ptr<graphNode>>;
 
 class graphNode {
 	std::string node_id_;
@@ -32,50 +40,33 @@ class graphNode {
 	bool node_is_complete_;
 	
 public:
-	graphNode() :
-		beginning_clock_cycle_(0), node_is_executing_(false), node_is_complete_(false) { }
+	graphNode();
+	graphNode(std::string node_id, unsigned task_type_id);
 
-	graphNode(std::string node_id, unsigned task_type_id) :
-		beginning_clock_cycle_(0), node_is_executing_(false), node_is_complete_(false) {
+	std::string getNodeId() const;
+	unsigned getTaskTypeId() const;
+	unsigned getIpId() const;
+	bool getIsNodeMappedToRegion() const;
+	bool getIsMappedToRr() const;
+	unsigned getRegionId() const;
+	bool getNodeIsExecuting() const;
+	unsigned getExecutionLatency() const;
+	bool getNodeIsComplete() const;
+	int long getCyclesRemaining() const;
 
-		node_id_ = node_id;
-		task_type_id_ = task_type_id;
-	}
+	void setIpId(unsigned ip_id);
+	void setNodeIsComplete();
 
-	// ~graphNode() {
-
-	// 	for (unsigned i = 0; i < successor_nodes_.size(); i++) {
-	// 		delete successor_nodes_.at(i);
-	// 	}
-	// }
-
-
-	std::string getNodeId() const { return node_id_; }
-	unsigned getTaskTypeId() const { return task_type_id_; }
-	unsigned getIpId() const { return ip_id_; }
-	bool getIsNodeMappedToRegion() const { return node_is_mapped_to_region_; }
-	bool getIsMappedToRr() const { return mapped_to_rr_else_sr_; }
-	unsigned getRegionId() const { return region_id_; }
-	bool getNodeIsExecuting() const { return node_is_executing_; }
-	unsigned getExecutionLatency() const { return execution_latency_; }
-	bool getNodeIsComplete() const { return node_is_complete_; }
-	int long getCyclesRemaining() const { return cycles_remaining_; }
-
-	void setIpId(unsigned ip_id) { ip_id_ = ip_id; }
-	void setNodeIsComplete() { node_is_complete_ = true; }
-
-	bool hasPredecessors() const { return !predecessor_nodes_.empty(); }
-	std::vector<std::shared_ptr<graphNode>> getPredecessorNodes() const { return predecessor_nodes_; }
-	void addPredecessorNode(std::shared_ptr<graphNode> predecessor) { predecessor_nodes_.push_back(predecessor); }
-
-	std::vector<std::shared_ptr<graphNode>> getSuccessorNodes() const { return successor_nodes_; }
-	void addSuccessorNode(std::shared_ptr<graphNode> successor) { successor_nodes_.push_back(successor); }
-
-	std::shared_ptr<applicationTrace> getApplicationTrace() const { return corresponding_trace_; }
-	void setApplicationTrace(std::shared_ptr<applicationTrace> corresponding_trace) { corresponding_trace_ = corresponding_trace; }
+	bool hasPredecessors() const;
+	std::vector<std::shared_ptr<graphNode>> getPredecessorNodes() const;
+	void addPredecessorNode(std::shared_ptr<graphNode> predecessor);
+	std::vector<std::shared_ptr<graphNode>> getSuccessorNodes() const;
+	void addSuccessorNode(std::shared_ptr<graphNode> successor);
+	std::shared_ptr<applicationTrace> getApplicationTrace() const;
+	void setApplicationTrace(std::shared_ptr<applicationTrace> corresponding_trace);
 
 	void setMappedRegion(bool is_rr_else_sr, unsigned region_id);
-	std::vector<std::shared_ptr<applicationTrace>> getDependentApplicationTraces();
+	traces_t getDependentApplicationTraces();
 	void beginExecution(unsigned execution_latency, unsigned long long beginning_clock_cycle);
 	bool allDependenciesSatisfied();
 	int long adjustExecutionLatencyByContextUpdate(unsigned long long current_clock_cycle);

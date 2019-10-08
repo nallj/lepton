@@ -1,20 +1,22 @@
 #ifndef LEPTON_GRAPH_MAPPER_2_H
 #define LEPTON_GRAPH_MAPPER_2_H
 
-#include <deque> // deque
 #include <limits> // numeric_limits
 #include <memory> // shared_ptr
-#include <unordered_map> // unordered_map
+#include <unordered_map>
 #include <utility> // make_pair
-#include <vector> // vector
+#include <vector>
 
 #include "graph.h"
-#include "moduleHelper.h"
-#include "moduleIterationActions.h"
-#include "../applicationTrace.h"
-#include "../availableModule.h"
+#include "graphNode.h"
+#include "../core/applicationTrace.h"
+#include "../core/availableModule.h"
+#include "../core/reconfigurableRegions.h"
 #include "../files/fileWriter.h"
-#include "../parameters/parameters.h"
+#include "../helpers/debugHelper.h"
+#include "../helpers/moduleIterationActions.h"
+#include "../helpers/nodeHelper.h"
+#include "../parameters/ipParam.h"
 
 // Debug message controls.
 #define DEBUG_MAP_REGIONS false
@@ -25,55 +27,60 @@ enum class moduleSelectionType {
 };
 
 class graphMapper {
-
+  unsigned long long _execution_counter;
   std::string input_file_;
 
-  std::vector<std::shared_ptr<applicationTrace>> mapRegionsToGraphNodesAndProduceTracesIterativeBreadthFirst(
-    std::deque<std::shared_ptr<graphNode>> available_nodes,
-    ip_params_map_t& ip_params_map,
-    region_to_avail_modules_t& available_sr_modules,
-    region_to_avail_modules_t& available_rr_modules,
-    ip_to_capable_modules_map_t ip_to_capable_modules_map
+  void advanceExecutionContextByEarliestFinishingTask(
+    region_to_modules_map_t& available_sr_modules,
+    reconfigurableRegions& rr_contents
   );
 
-  void advanceExecutionContextByEarliestFinishingTask(
-    region_to_avail_modules_t& available_sr_modules,
-    std::unordered_map<unsigned, std::shared_ptr<availableModule>>& rr_contents,
-    unsigned long long& execution_counter
+  void attemptNodeScheduling(
+    nodes_list_t &available_nodes,
+    ip_to_capable_modules_map_t &ip_to_capable_modules_map,
+    reconfigurableRegions &rr_contents,
+    nodes_map_t &executing_nodes,
+    ip_params_map_t &ip_params_map,
+    unsigned long &trace_id,
+    traces_t &resultant_traces,
+    nodes_map_t &nodes_with_pending_dependencies,
+    region_to_modules_map_t &available_sr_modules
+  );
+
+  void handleNodesWithPendingDependencies(
+    nodes_map_t &nodes_with_pending_dependencies,
+    nodes_list_t &available_nodes,
+    region_to_modules_map_t &available_sr_modules,
+    reconfigurableRegions &rr_contents
+  );
+
+  traces_t mapRegionsToGraphNodesAndProduceTracesIterativeBreadthFirst(
+    nodes_list_t available_nodes,
+    ip_params_map_t& ip_params_map,
+    region_to_modules_map_t& available_sr_modules,
+    region_to_modules_map_t& available_rr_modules,
+    ip_to_capable_modules_map_t ip_to_capable_modules_map
   );
 
   // F.60: Prefer T* over T& when "no argument" is a valid option
   void performActionsOverAllModules(
-    region_to_avail_modules_t& available_sr_modules,
-    std::unordered_map<unsigned, std::shared_ptr<availableModule>>& rr_contents,
-    unsigned long long& execution_counter,
+    region_to_modules_map_t& available_sr_modules,
+    //std::unordered_map<unsigned, std::shared_ptr<availableModule>>& rr_contents,
+    reconfigurableRegions& rr_contents,
     int long& least_than_scoreboard,
     std::shared_ptr<graphNode>& least_than_reference,
-    
-    void (*sr_action)(
-      std::shared_ptr<availableModule>& sr_module,
-      unsigned long long& execution_counter,
-      int long& least_than_scoreboard,
-      std::shared_ptr<graphNode>& least_than_reference
-    ),
-    void (*rr_action)(
-      unsigned rr_id,
-      std::shared_ptr<availableModule>& rr_module,
-      unsigned long long& execution_counter,
-      int long& least_than_scoreboard,
-      std::shared_ptr<graphNode>& least_than_reference
-    )
+    sr_action_t sr_action,
+    rr_action_t rr_action
   );
 
 public:
-  graphMapper(std::string input_file) :
-    input_file_(input_file) {}
+  graphMapper(std::string input_file);
 
   void mapRegionsToGraphNodesAndProduceTraces(
-    const std::vector<std::shared_ptr<graph>>& graphs,
+    const graphs_t &graphs,
     ip_params_map_t& ip_params_map,
-    region_to_avail_modules_t& available_sr_modules,
-    region_to_avail_modules_t& available_rr_modules,
+    region_to_modules_map_t& available_sr_modules,
+    region_to_modules_map_t& available_rr_modules,
     ip_to_capable_modules_map_t& ip_to_capable_modules_map,
     moduleSelectionType module_selection_method
   );

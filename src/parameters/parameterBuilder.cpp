@@ -62,8 +62,7 @@ allParamMaps parameterBuilder::collectAllParamMapsFromConfigFile(
 
   // DEBUG MESSAGES
   if (DEBUG_COLLECT_CONFIG_PARAMS) {
-    auto debug_helper = debugHelper();
-    debug_helper.debugCollectConfigParams(all_params);
+    debugHelper::debugCollectConfigParams(all_params);
   }
 
   return all_params;
@@ -86,8 +85,8 @@ void parameterBuilder::parseIpParam(
   // Create the entry for this IP if it doesn't yet exist in the map.
   if (!keyInMap(ip_params_map, ip_id)) {
 
-    auto ip_params = ipParams();
-    ip_params_map.insert(std::pair<unsigned, ipParams>(ip_id, ip_params));
+    auto ip_params = ipParam();
+    ip_params_map.insert(std::pair<unsigned, ipParam>(ip_id, ip_params));
   }
 
   auto &ip_params = ip_params_map[ip_id];
@@ -128,8 +127,8 @@ void parameterBuilder::parseSrParam(
 
   // First occurrence of this SR.
   } else {
-    auto sr_params = srParams(sr_module_id, ip_id);
-    sr_params_map.insert(std::pair<unsigned, srParams>(sr_id, sr_params));
+    auto sr_params = srParam(sr_module_id, ip_id);
+    sr_params_map.insert(std::pair<unsigned, srParam>(sr_id, sr_params));
   }
 }
 
@@ -138,7 +137,7 @@ void parameterBuilder::parseRrParam(
   std::size_t rr_param_position,
   const std::string &param,
   const std::string &arg,
-  std::unordered_map<unsigned, rrParams> &rr_params_map
+  std::unordered_map<unsigned, rrParam> &rr_params_map
 ) {
   auto region_and_module_ids = getRegionAndModuleId(param, rr_param_position);
 
@@ -159,8 +158,8 @@ void parameterBuilder::parseRrParam(
 
     // First occurrence of this RR.
   } else {
-    auto rr_params = rrParams(rr_module_id, ip_ids);
-    rr_params_map.insert(std::pair<unsigned, rrParams>(rr_id, rr_params));
+    auto rr_params = rrParam(rr_module_id, ip_ids);
+    rr_params_map.insert(std::pair<unsigned, rrParam>(rr_id, rr_params));
   }
 }
 

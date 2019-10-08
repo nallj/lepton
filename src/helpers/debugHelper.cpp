@@ -1,14 +1,13 @@
-
 #include "debugHelper.h"
 
-void debugHelper::debugCollectConfigParams(const allParamMaps& all_params) const {
+void debugHelper::debugCollectConfigParams(const allParamMaps& all_params) {
 
     const auto& ip_params = all_params.ip_params_map;
     const auto& sr_params = all_params.sr_params_map;
     const auto& rr_params = all_params.rr_params_map;
 
-    const auto& ordered_sr_params = std::map<unsigned, srParams>(sr_params.begin(), sr_params.end());
-    const auto& ordered_rr_params = std::map<unsigned, rrParams>(rr_params.begin(), rr_params.end());
+    const auto& ordered_sr_params = std::map<unsigned, srParam>(sr_params.begin(), sr_params.end());
+    const auto& ordered_rr_params = std::map<unsigned, rrParam>(rr_params.begin(), rr_params.end());
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_COLLECT_CONFIG_PARAMS' Debug Data\n\n";
@@ -78,7 +77,7 @@ void debugHelper::debugCollectConfigParams(const allParamMaps& all_params) const
               << "\n==============================================================================\n";
 }
 
-void debugHelper::debugFormGraphs(const std::vector<std::shared_ptr<graph>>& graphs) const {
+void debugHelper::debugFormGraphs(const graphs_t &graphs) {
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_FORM_GRAPHS' Debug Data\n\n";
@@ -116,7 +115,7 @@ void debugHelper::debugFormGraphs(const std::vector<std::shared_ptr<graph>>& gra
               << "\n==============================================================================\n";
 }
 
-void debugHelper::debugMarkGraphs(const std::vector<std::shared_ptr<graph>>& graphs) const {
+void debugHelper::debugMarkGraphs(const graphs_t &graphs) {
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_MARK_GRAPHS' Debug Data\n\n";
@@ -134,7 +133,7 @@ void debugHelper::debugMarkGraphs(const std::vector<std::shared_ptr<graph>>& gra
               << "\n==============================================================================\n";
 }
 
-void debugHelper::debugMapRegions(const std::vector<std::shared_ptr<graph>>& graphs) const {
+void debugHelper::debugMapRegions(const graphs_t &graphs) {
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_MAP_REGIONS' Debug Data\n\n";
@@ -157,7 +156,7 @@ void debugHelper::debugMapRegions(const std::vector<std::shared_ptr<graph>>& gra
               << "\n==============================================================================\n";
 }
 
-void debugHelper::debugIpToRegions(const ip_to_capable_modules_map_t& ip_to_capable_modules_map) const {
+void debugHelper::debugIpToRegions(const ip_to_capable_modules_map_t& ip_to_capable_modules_map) {
 
     std::cout << "\n==============================================================================\n"
               << " >>> Now printing 'DEBUG_IP_TO_REGIONS' Debug Data\n\n";

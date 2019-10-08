@@ -38,8 +38,7 @@ class fileReader {
 public:
 	const std::string input_file_;
 
-	fileReader(const std::string& input) :
-		is_valid_(true), input_file_(input) {}
+	fileReader(const std::string& input);
 
 	// Desired paramters only.
 	// fileReader(std::string input, std::vector<std::string> accept) :
@@ -63,13 +62,9 @@ public:
 	// 	std::vector<std::string> regex
 	// );
 
-	void setAcceptableParams(const std::vector<std::string>& params) {
-		acceptable_params_ = params;
-	}
+	void setAcceptableParams(const std::vector<std::string>& params);
 
-	void setRegexArgs(const std::vector<std::string>& args) {
-		regex_args_ = args;
-	}
+	void setRegexArgs(const std::vector<std::string>& args);
 
 	// Operations Functions //
 	void parseContent();
@@ -90,9 +85,7 @@ public:
 
 	// Accessor Methods //
 	bool isFileValid();
-	std::unordered_multimap<std::string, std::string> getParamsMap() {
-		return param_map_;
-	}
+	std::unordered_multimap<std::string, std::string> getParamsMap();
 	std::vector<std::string> getData();
 };
 

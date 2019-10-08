@@ -1,10 +1,10 @@
 
 #include "graphHandler.h"
 
-std::vector<std::shared_ptr<graph>> graphHandler::formGraphsFromTgffFile(
+graphs_t graphHandler::formGraphsFromTgffFile(
 	const std::string& input_file
 ) {
-	std::vector<std::shared_ptr<graph>> graphs;
+	graphs_t graphs;
 
 	std::ifstream in_file(input_file.c_str());
 	std::string line;
@@ -97,8 +97,7 @@ std::vector<std::shared_ptr<graph>> graphHandler::formGraphsFromTgffFile(
 
 	// DEBUG MESSAGES
 	if (DEBUG_FORM_GRAPHS) {
-		auto debug_helper = debugHelper();
-		debug_helper.debugFormGraphs(graphs);
+		debugHelper::debugFormGraphs(graphs);
 	}
 
 	return graphs;
@@ -106,7 +105,7 @@ std::vector<std::shared_ptr<graph>> graphHandler::formGraphsFromTgffFile(
 
 // TODO: Support user specified restrictions on which IPs may match with which task types.
 void graphHandler::markGraphTasksWithIps(
-	const std::vector<std::shared_ptr<graph>>& graphs,
+	const graphs_t &graphs,
 	unsigned ip_count
 ) {
 	// TODO: This should be derived from configuration parameters, otherwise set to 0.
@@ -138,8 +137,7 @@ void graphHandler::markGraphTasksWithIps(
 
 	// DEBUG MESSAGES
 	if (DEBUG_MARK_GRAPHS) {
-		auto debug_helper = debugHelper();
-		debug_helper.debugMarkGraphs(graphs);
+		debugHelper::debugMarkGraphs(graphs);
 	}
 }
 

@@ -1,7 +1,5 @@
 #include "moduleIterationActions.h"
 
-/* PUBLIC */
-
 void moduleIterationActions::setNotActiveSr(
   std::shared_ptr<availableModule> &module,
   unsigned long long &ignore0,

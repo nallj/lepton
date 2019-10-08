@@ -8,9 +8,12 @@
 
 #include "graph/graphHandler.h"
 #include "graph/graphMapper.h"
-#include "graph/moduleHelper.h"
+#include "helpers/moduleHelper.h"
 #include "parameters/parameterBuilder.h"
-#include "parameters/parameters.h"
+// #include "parameters/parameters.h"
+// #include "ipParam.h"
+// #include "srParam.h"
+// #include "rrParam.h"
 #include "parameters/parameterParser.h"
 
 
@@ -39,16 +42,6 @@ int main(int argc, char** argv) {
 			// Get all the region and module counts.
 			auto counts = parameter_parser.countRegionsAndModules(drachma_app_file_path);
 
-			// Prepare containers for relevant specification parameters.
-			//std::vector<ipParams> ip_params;
-			//std::vector<srParams> sr_params;
-			//std::vector<rrParams> rr_params;
-
-
-
-			//sr_params_map_t sr_params_map;
-			//rr_params_map_t rr_params_map;
-
 			auto parameter_builder = parameterBuilder();
 
 			// Get all supplied mapping parameters.
@@ -58,7 +51,6 @@ int main(int argc, char** argv) {
 			auto sr_params_map = all_params.sr_params_map;
 			auto rr_params_map = all_params.rr_params_map;
 
-			//std::vector<std::shared_ptr<graph>> graphs;
 			auto graph_handler = graphHandler();
 
 			// Get the TGFF file where the graph data is populated.
@@ -68,10 +60,10 @@ int main(int argc, char** argv) {
 			auto graphs = graph_handler.formGraphsFromTgffFile(tgff_file_path);
 
 			/*
-			* 1. By what means do I choose which IPs are assigned to which nodes?
-			* 		-random
-			* 		-specify which IPs may go on what task type (tedious to support)
-			*/
+			 * 1. By what means do I choose which IPs are assigned to which nodes?
+			 * 		-random
+			 * 		-specify which IPs may go on what task type (tedious to support)
+			 */
 			graph_handler.markGraphTasksWithIps(graphs, ip_params_map.size());
 
 			// Get region-to-ip mapping approach (either random or lowest cost).
@@ -83,31 +75,31 @@ int main(int argc, char** argv) {
 			}
 
 			/*
-			* 2. Perform the mapping of the SRs/RRs to each IP node
-			*		-random
-			*		-least cost fit (tedious to support)
-			*/
-
-			auto module_helper = moduleHelper();
+			 * 2. Perform the mapping of the SRs/RRs to each IP node
+			 *		-random
+			 *		-least cost fit (TODO)
+			 */
 
 			// Build two vectors (static and reconfigurable) of regions matched to vectors of all available modules per each region.
-			//module_helper.buildRegionToAvailableModuleVectors(available_sr_modules, sr_params_map, available_rr_modules, rr_params_map);
-
-			auto available_sr_modules = module_helper.buildSrToAvailableModuleMap(sr_params_map);
-			auto available_rr_modules = module_helper.buildRrToAvailableModuleMap(rr_params_map);
+			auto available_sr_modules = moduleHelper::buildSrToAvailableModuleMap(sr_params_map);
+			auto available_rr_modules = moduleHelper::buildRrToAvailableModuleMap(rr_params_map);
 
 			ip_to_capable_modules_map_t ip_to_capable_modules_map;
 
-			// Create an IP-to-available module map.
-			//auto ip_to_capable_modules_map =
-			//	module_helper.buildIpToModuleMaps(sr_params_map, available_sr_modules, rr_params_map, available_rr_modules);
-			module_helper.buildIpToSrModuleMap(sr_params_map, available_sr_modules, ip_to_capable_modules_map);
-			module_helper.buildIpToRrModuleMap(rr_params_map, available_rr_modules, ip_to_capable_modules_map);
+			// Create an IP-to-capable module map.
+			moduleHelper::buildIpToSrModuleMap(sr_params_map, available_sr_modules, ip_to_capable_modules_map);
+			moduleHelper::buildIpToRrModuleMap(rr_params_map, available_rr_modules, ip_to_capable_modules_map);
 
 			auto graph_mapper = graphMapper(lepton_spec_file_path);
 
-			graph_mapper.mapRegionsToGraphNodesAndProduceTraces(graphs, ip_params_map, available_sr_modules,
-				available_rr_modules, ip_to_capable_modules_map, module_selection_method);
+			graph_mapper.mapRegionsToGraphNodesAndProduceTraces(
+				graphs,
+				ip_params_map,
+				available_sr_modules,
+				available_rr_modules,
+				ip_to_capable_modules_map,
+				module_selection_method
+			);
 
 		// Too many arguments supplied.
 		} else if (argc > 1) {

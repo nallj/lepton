@@ -1,6 +1,6 @@
-
 #include "parameterParser.h"
 
+regionAndModuleCounts::regionAndModuleCounts() : sr_count_(0), rr_count_(0) {}
 
 parsedFileContents parameterParser::parseLeptonSpecificationFile(const std::string& spec_file_path) const {
 

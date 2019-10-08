@@ -3,8 +3,8 @@
 
 #include <memory> // shared_ptr
 
-#include "../availableModule.h"
-#include "graphNode.h"
+#include "../core/availableModule.h"
+#include "../graph/graphNode.h"
 
 typedef void (*sr_action_t)(
   std::shared_ptr<availableModule> &sr_module,

@@ -7,23 +7,20 @@
 #include <string> // find, getline, string
 #include <vector> // vector
 
-#include "../debugHelper.h"
 #include "graph.h"
 #include "graphNode.h"
+#include "../helpers/debugHelper.h"
 
 // Debug message controls.
 #define DEBUG_FORM_GRAPHS false
 #define DEBUG_MARK_GRAPHS false
 
 class graphHandler {
+  void markGraphTasksWithIpsRecursive(std::shared_ptr<graphNode> node, unsigned ip_count);
 
 public:
-    std::vector<std::shared_ptr<graph>> formGraphsFromTgffFile(const std::string& input_file);
-
-    void markGraphTasksWithIps(const std::vector<std::shared_ptr<graph>>& graphs, unsigned ip_count);
-
-private:
-    void markGraphTasksWithIpsRecursive(std::shared_ptr<graphNode> node, unsigned ip_count);
+  graphs_t formGraphsFromTgffFile(const std::string& input_file);
+  void markGraphTasksWithIps(const graphs_t &graphs, unsigned ip_count);
 };
 
 #endif

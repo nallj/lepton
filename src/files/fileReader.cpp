@@ -8,6 +8,17 @@ bool operator==(const char& ch, const specialTag& st) {
 
 /* PUBLIC */
 
+fileReader::fileReader(const std::string& input) :
+  is_valid_(true), input_file_(input) {}
+
+void fileReader::setAcceptableParams(const std::vector<std::string>& params) {
+	acceptable_params_ = params;
+}
+
+void fileReader::setRegexArgs(const std::vector<std::string>& args) {
+	regex_args_ = args;
+}
+
 // Operations Functions //
 
 void fileReader::parseContent() {
@@ -198,6 +209,10 @@ void fileReader::printEntries() const {
 // Accessor Methods //
 
 bool fileReader::isFileValid() { return is_valid_; }
+
+std::unordered_multimap<std::string, std::string> fileReader::getParamsMap() {
+	return param_map_;
+}
 
 std::vector<std::string> fileReader::getData() {
 

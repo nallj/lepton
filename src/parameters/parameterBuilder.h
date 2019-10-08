@@ -7,14 +7,16 @@
 #include <utility> // pair
 #include <vector> // vector
 
-#include "../debugHelper.h"
-#include "parameters.h"
+#include "ipParam.h"
+#include "srParam.h"
+#include "rrParam.h"
+#include "../helpers/debugHelper.h"
 
 // Debug message controls.
 #define DEBUG_COLLECT_CONFIG_PARAMS false
 
 struct allParamMaps {
-  //std::vector<ipParams> ip_params;
+  //std::vector<ipParam> ip_params;
   ip_params_map_t ip_params_map;
   sr_params_map_t sr_params_map;
   rr_params_map_t rr_params_map;

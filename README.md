@@ -14,6 +14,12 @@ v0.8.0
 ### Style
 To the best of the author's ability, this project conforms to the "C++ Core Guidelines" found here <https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md>.  Any exceptions or additional rules may be located within the .styleguide file.
 
+### Keywords
+* IP (Intellectual Property) - Represents a unique hardware specification that may occupy a module within a region.
+* module - A portion within a region that is able to configured with one or more IPs.
+* region - A section of the theoretical FPGA that houses one or more modules.  May be static or reconfigurable.
+* RR (Reconfigurable Region) - A region containing modules that may be reconfigured during runtime.
+* SR (Static Region) - A region that is configured on start and cannot be reconfigured at any point in runtime.
 
 ### To-do List     
 * Consider splitting mapper class into mapper/tracer classes or tracer/tracerHelper classes.

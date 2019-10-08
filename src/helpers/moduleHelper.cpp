@@ -1,10 +1,9 @@
 #include "moduleHelper.h"
 
-region_to_avail_modules_t moduleHelper::buildSrToAvailableModuleMap(
+region_to_modules_map_t moduleHelper::buildSrToAvailableModuleMap(
   const sr_params_map_t &sr_params_map
-) const {
-
-  region_to_avail_modules_t available_sr_modules_map;
+) {
+  region_to_modules_map_t available_sr_modules_map;
 
   // Loop through each static region.
   for (auto &sr_it : sr_params_map) {
@@ -21,25 +20,20 @@ region_to_avail_modules_t moduleHelper::buildSrToAvailableModuleMap(
     // Get reference to new entry.
     auto &sr_entry = available_sr_modules_map[sr_id];
 
-    //std::vector<std::shared_ptr<availableModule>> region_modules;
-
     // Loop through each static region module and create corresponding module objects.
     for (auto &module_it : sr_params.getModuleIdToIpIdMap()) {
-      //region_modules.push_back(new availableModule(sr_id, module_it.first, true));
-      sr_entry.push_back(std::shared_ptr<availableModule>(new availableModule(sr_id, module_it.first, true)));
+      sr_entry.push_back(std::shared_ptr<availableModule>(
+        new availableModule(sr_id, module_it.first, true))
+      );
     }
-    // Store all of the modules for this static region.
-    //available_sr_modules_map.push_back(region_modules);
   }
-
   return available_sr_modules_map;
 }
 
-region_to_avail_modules_t moduleHelper::buildRrToAvailableModuleMap(
+region_to_modules_map_t moduleHelper::buildRrToAvailableModuleMap(
   const rr_params_map_t &rr_params_map
-) const {
-
-  region_to_avail_modules_t available_rr_modules_map;
+) {
+  region_to_modules_map_t available_rr_modules_map;
 
   // Loop through each reconfigurable region.
   for (auto &rr_it : rr_params_map) {
@@ -59,33 +53,19 @@ region_to_avail_modules_t moduleHelper::buildRrToAvailableModuleMap(
     // Get reference to new entry.
     auto &rr_entry = available_rr_modules_map[rr_id];
 
-    //std::vector<std::shared_ptr<availableModule>>> region_modules;
-
     // Loop through each reconfigurable region module and create corresponding module objects.
     for (auto &entry_it : rr_params._getModuleIdToIpIdsMap()) {
-
-      //auto module_id = entry_it.first;
-      //auto ip_ids = entry_it.second;
-
-      //region_modules.push_back(new availableModule(rr_id, module_it.first));
-      //for (auto& module_it : entry_it.second) {
-      //unsigned mod_id = module_it.first;
       rr_entry.push_back(std::shared_ptr<availableModule>(new availableModule(rr_id, entry_it.first)));
     }
-
-    // Store all of the modules for this reconfigurable region.
-    //available_rr_modules.push_back(region_modules);
   }
-
   return available_rr_modules_map;
 }
 
 void moduleHelper::buildIpToSrModuleMap(
   const sr_params_map_t &sr_params_map,
-  region_to_avail_modules_t &available_sr_modules,
+  region_to_modules_map_t &available_sr_modules,
   ip_to_capable_modules_map_t &containing_map
-) const {
-
+) {
   // Loop through each static region.
   for (const auto &sr_entry : sr_params_map) {
 
@@ -113,18 +93,16 @@ void moduleHelper::buildIpToSrModuleMap(
     }
   }
 
-  // if (DEBUG_IP_TO_REGIONS) {
-  //     auto debug_helper = debugHelper();
-  //     debug_helper.debugIpToRegions(containing_map);
-  // }
+  if (DEBUG_IP_TO_REGIONS) {
+    debugHelper::debugIpToRegions(containing_map);
+  }
 }
 
 void moduleHelper::buildIpToRrModuleMap(
   const rr_params_map_t &rr_params_map,
-  region_to_avail_modules_t &available_rr_modules,
+  region_to_modules_map_t &available_rr_modules,
   ip_to_capable_modules_map_t &containing_map
-) const {
-
+) {
   // Loop through each region.
   for (const auto &rr_entry : rr_params_map) {
 
@@ -158,7 +136,6 @@ void moduleHelper::buildIpToRrModuleMap(
   }
 
   if (DEBUG_IP_TO_REGIONS) {
-    auto debug_helper = debugHelper();
-    debug_helper.debugIpToRegions(containing_map);
+    debugHelper::debugIpToRegions(containing_map);
   }
 }

@@ -7,7 +7,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../files/specificFileReaders.h"
+#include "../files/drachmaAppFileReader.h"
+#include "../files/leptonSpecFileReader.h"
 
 struct parsedFileContents {
 
@@ -22,7 +23,7 @@ struct regionAndModuleCounts {
   std::vector<unsigned> sr_module_counts_;
   std::vector<unsigned> rr_module_counts_;
 
-  regionAndModuleCounts() : sr_count_(0), rr_count_(0) {}
+  regionAndModuleCounts();
 };
 
 // Collection of functions that use the file handler to parse input files for relevant parameters.

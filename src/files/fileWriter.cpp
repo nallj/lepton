@@ -1,5 +1,12 @@
-
 #include "fileWriter.h"
+
+fileWriter::fileWriter(const std::string& input) :
+	input_file_(input) {}
+
+
+void fileWriter::deleteIfExists() const {
+	remove(input_file_.c_str());
+}
 
 void fileWriter::addSingleLineToEof(const std::string& line) const {
 
