@@ -10,9 +10,10 @@
 #include "../files/drachmaAppFileReader.h"
 #include "../files/leptonSpecFileReader.h"
 
-struct parsedFileContents {
+using params_map_t = std::unordered_multimap<std::string, std::string>;
 
-  std::unordered_multimap<std::string, std::string> params_map;
+struct parsedFileContents {
+  params_map_t params_map;
   std::vector<std::string> data;
 };
 

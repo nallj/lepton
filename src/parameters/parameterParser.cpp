@@ -5,7 +5,6 @@ regionAndModuleCounts::regionAndModuleCounts() : sr_count_(0), rr_count_(0) {}
 parsedFileContents parameterParser::parseLeptonSpecificationFile(const std::string& spec_file_path) const {
 
 	// Read in the Lepton specification file.
-	//auto file_handler = fileReader(spec_file_path, lepton_simple_params, lepton_regex_params);
 	auto file_handler = leptonSpecFileReader(spec_file_path);
 
 	if (!file_handler.isFileValid()) {
@@ -16,7 +15,6 @@ parsedFileContents parameterParser::parseLeptonSpecificationFile(const std::stri
 	parsedFileContents parsed_file_contents = { file_handler.getParamsMap(), file_handler.getData() };
 
 	// Return the assembled parameters.
-	//return std::pair<std::unordered_multimap<std::string, std::string>, std::vector<std::string>>();
 	return parsed_file_contents;
 }
 

@@ -37,5 +37,5 @@ To the best of the author's ability, this project conforms to the "C++ Core Guid
 
   This would be a more accurate representation of possible real-life applications.
   
-* Add ability to provide random seed within .t2d file.
+* Add ability to provide random seed within .lep file.
 * Implement least cost application execution.

@@ -4,7 +4,7 @@
 /* PUBLIC */
 
 graphMapper::graphMapper(std::string input_file) :
-  input_file_(input_file) {}
+  input_file_(input_file) { }
 
 void graphMapper::mapRegionsToGraphNodesAndProduceTraces(
   const graphs_t &graphs,
@@ -12,19 +12,9 @@ void graphMapper::mapRegionsToGraphNodesAndProduceTraces(
   region_to_modules_map_t &available_sr_modules,
   region_to_modules_map_t &available_rr_modules,
   ip_to_capable_modules_map_t &ip_to_capable_modules_map,
-  moduleSelectionType module_selection_method
+  moduleSelectionType module_selection_method,
+  unsigned random_seed
 ) {
-
-  // TODO: This should be derived from configuration parameters, otherwise set to 0.
-  auto use_time_as_random_seed = false;
-  unsigned random_seed;
-
-  if (use_time_as_random_seed) {
-    random_seed = (unsigned)time(0);
-  } else {
-    random_seed = 7285;
-  }
-
   // Feed the seed to the pseudo-random number generator.
   srand(random_seed);
 
@@ -440,7 +430,11 @@ void graphMapper::handleNodesWithPendingDependencies(
             << nodes_with_pending_dependencies.size()
             << " total) = { ";
 
-  for (auto it = nodes_with_pending_dependencies.begin(); it != nodes_with_pending_dependencies.end(); ++it) {
+  for (
+    auto it = nodes_with_pending_dependencies.begin();
+    it != nodes_with_pending_dependencies.end();
+    ++it
+  ) {
     std::cout << (*it).first;
     if (it != nodes_with_pending_dependencies.end()) {
       std::cout << ", ";

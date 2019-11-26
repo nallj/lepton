@@ -10,17 +10,37 @@
 #include "graph/graphMapper.h"
 #include "helpers/moduleHelper.h"
 #include "parameters/parameterBuilder.h"
-// #include "parameters/parameters.h"
-// #include "ipParam.h"
-// #include "srParam.h"
-// #include "rrParam.h"
 #include "parameters/parameterParser.h"
+
+unsigned long findSeedOrAssignFromTime(params_map_t statically_defined_params, std::string static_key) {
+	auto random_seed_arg = statically_defined_params.find(static_key);
+	if (random_seed_arg != statically_defined_params.end()) {
+		return std::stoul(random_seed_arg->second);
+	}
+	return (unsigned long) time(0);
+}
+
+moduleSelectionType getRegionToIpMappingApproach(params_map_t statically_defined_params) {
+	auto region_to_ip_mapping_approach = statically_defined_params.find("region to ip mapping");
+	moduleSelectionType module_selection_method;
+
+	if (
+		region_to_ip_mapping_approach == statically_defined_params.end() ||
+		region_to_ip_mapping_approach->second == "random"
+	) {
+		return moduleSelectionType::random;
+	}
+	if (region_to_ip_mapping_approach->second == "least cost") {
+		return moduleSelectionType::least_cost;
+	}
+	throw std::invalid_argument("Invalid region-to-IP mapping approach.");
+}
+			
 
 
 int main(int argc, char** argv) {
 
-	std::cout << "\nLepton : Utility program for producing Drachma application traces from TGFF outputs.\n\n\n";
-
+	std::cout << "\nLepton : Utility program for producing Drachma application traces from TGFF outputs.\n\n";
 	try {
 
 		// Input file given.
@@ -36,11 +56,24 @@ int main(int argc, char** argv) {
 			auto statically_defined_params = spec_file_contents.params_map;
 			auto param_data = spec_file_contents.data;
 
+			// Get seeds for randomness.
+			auto handler_random_seed = findSeedOrAssignFromTime(
+				statically_defined_params,
+				"handler random seed"
+			);
+			std::cout << "\thandler random seed: " << handler_random_seed << "\n";
+
+			auto mapper_random_seed = findSeedOrAssignFromTime(
+				statically_defined_params,
+				"mapper random seed"
+			);
+			std::cout << "\tmapper random seed: " << mapper_random_seed << "\n\n\n";
+
 			// Get the Drachma application file.
-			auto drachma_app_file_path = statically_defined_params.find("drachma app file")->second;
+			// auto drachma_app_file_path = statically_defined_params.find("drachma app file")->second;
 
 			// Get all the region and module counts.
-			auto counts = parameter_parser.countRegionsAndModules(drachma_app_file_path);
+			// auto counts = parameter_parser.countRegionsAndModules(drachma_app_file_path);
 
 			auto parameter_builder = parameterBuilder();
 
@@ -62,25 +95,22 @@ int main(int argc, char** argv) {
 			/*
 			 * 1. By what means do I choose which IPs are assigned to which nodes?
 			 * 		-random
-			 * 		-specify which IPs may go on what task type (tedious to support)
+			 * 		-specify which IPs may go on what task type (TODO)
 			 */
-			graph_handler.markGraphTasksWithIps(graphs, ip_params_map.size());
 
-			// Get region-to-ip mapping approach (either random or lowest cost).
-			auto region_to_ip_mapping_approach = statically_defined_params.find("region to ip mapping");
-			moduleSelectionType module_selection_method;
-
-			if (region_to_ip_mapping_approach == statically_defined_params.end() || region_to_ip_mapping_approach->second != "least cost") {
-				module_selection_method = moduleSelectionType::random;
-			}
+			graph_handler.markGraphTasksWithIps(graphs, ip_params_map.size(), handler_random_seed);
 
 			/*
 			 * 2. Perform the mapping of the SRs/RRs to each IP node
-			 *		-random
+			 *		-random (default)
 			 *		-least cost fit (TODO)
 			 */
 
-			// Build two vectors (static and reconfigurable) of regions matched to vectors of all available modules per each region.
+			// Get region-to-ip mapping approach (either random or lowest cost).
+			auto module_selection_method = getRegionToIpMappingApproach(statically_defined_params);
+
+			// Build two vectors (static and reconfigurable) of regions matched to vectors of all available
+			// modules per each region.
 			auto available_sr_modules = moduleHelper::buildSrToAvailableModuleMap(sr_params_map);
 			auto available_rr_modules = moduleHelper::buildRrToAvailableModuleMap(rr_params_map);
 
@@ -98,7 +128,8 @@ int main(int argc, char** argv) {
 				available_sr_modules,
 				available_rr_modules,
 				ip_to_capable_modules_map,
-				module_selection_method
+				module_selection_method,
+				mapper_random_seed
 			);
 
 		// Too many arguments supplied.

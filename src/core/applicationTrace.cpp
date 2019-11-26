@@ -54,8 +54,9 @@ unsigned long long applicationTrace::getCalculatedEndTime() const {
 std::string applicationTrace::getHumanFriendlyDisplayString() const {
 	
 	std::string result = std::to_string(ip_id_) + ", ";
-	if (is_static_)
+	if (is_static_) {
 		result.append("s");
+	}
 
 	result.append(std::to_string(region_id_) + ", "
 		+ std::to_string(module_id_) + ", "

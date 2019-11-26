@@ -6,7 +6,9 @@ leptonSpecFileReader::leptonSpecFileReader(const std::string& input) :
   // Acceptable parameters from Lepton specification files.
   std::vector<std::string> lepton_simple_params {
       "tgff file",
-      "drachma app file"
+      "drachma app file",
+      "handler random seed",
+      "mapper random seed"
   };
   std::vector<std::string> lepton_regex_params {
       "\\bip\\d+\\b \\blatency\\b[:] \\d+",

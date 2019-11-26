@@ -70,8 +70,6 @@ void fileReader::parseContent() {
 			// Push non-disqualified line onto file body holder.
 			file_body_.push_back( std::make_pair(lineType::unknown, line) );
 		}
-
-
 	}
 
 	in_file.close();
@@ -161,7 +159,6 @@ void fileReader::printEntries() const {
 
 	std::cout << "> PARAMETER MULTIMAP <\n";
 
-
 	for (auto& it : param_map_) {
 		std::cout << "MAP: " << it.first << "  \t=>\t" << it.second << "\n";
 	}
@@ -172,7 +169,6 @@ void fileReader::printEntries() const {
 				std::cout << "DATA: " << file_body_[i].second << "\n";
 		}
 	}
-
 }
 
 // std::pair<bool, unsigned long> fileReader::findInFile(std::string line) {

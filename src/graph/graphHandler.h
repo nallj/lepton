@@ -20,7 +20,7 @@ class graphHandler {
 
 public:
   graphs_t formGraphsFromTgffFile(const std::string& input_file);
-  void markGraphTasksWithIps(const graphs_t &graphs, unsigned ip_count);
+  void markGraphTasksWithIps(const graphs_t &graphs, unsigned ip_count, unsigned random_seed);
 };
 
 #endif

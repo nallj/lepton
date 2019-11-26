@@ -5,8 +5,14 @@ drachma app file: simple_example/random.app
 # TODO: may be 'random' or 'least cost'.  set to 'random' by default if not otherwise specified.
 #region to ip mapping: random
 
+# Seed used for ensuring repeatability.  Most relevant for 'random' mapping.  Also used for tie-breaking
+# in 'least cost' mapping (when it becomes available).
+handler random seed: 5762
+mapper random seed: 7285
+
 # latency dictates how long an ip takes on average (in clock cycles)  to complete a task.
-# tolerance is how far a task on the ip could potentially change based on increase/decrease in task complexity.
+# tolerance is how far a task on the ip could potentially change based on increase/decrease in task
+# complexity.
 ip0 latency: 100
 ip0 upper tolerance: 10
 ip0 lower tolerance: 5
@@ -122,7 +128,7 @@ rr4 module 1: { ip11, ip14 }
 # rr3 bitstream size: 64
 # rr4 bitstream size: 64
 
-# clock region speeds (in Mhz)
+# clock region speeds (in MHz)
 # cr0: 100.00
 # cr1: 50.00
 # cr2: 33.33
@@ -132,7 +138,7 @@ rr4 module 1: { ip11, ip14 }
 # cr1 regions: { rr2, rr3, rr4 }
 # cr2 regions: { rr0, rr1 }
 
-# the frequency of the configuration library controller's clock (in Mhz)
+# the frequency of the configuration library controller's clock (in MHz)
 # config memory speed: 41.66
 # equivalent of 1,333 Mb/s with a 32 bit port (as in DDR3)
 
@@ -142,4 +148,3 @@ rr4 module 1: { ip11, ip14 }
 # use blank for rr2 (do not uncomment)
 # initial rr3 module: 0
 # initial rr4 module: 1
-

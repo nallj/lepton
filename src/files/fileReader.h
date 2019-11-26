@@ -40,30 +40,7 @@ public:
 
 	fileReader(const std::string& input);
 
-	// Desired paramters only.
-	// fileReader(std::string input, std::vector<std::string> accept) :
-	// 	is_valid_(true), input_file_(input), acceptable_params_(accept) {
-
-	// 	parseContent(input);
-	// 	parseEntries();
-	// }
-
-	// fileReader(std::string input, std::vector<std::string> accept, std::vector<std::string> regex) :
-	// 	is_valid_(true), input_file_(input), acceptable_params_(accept), regex_args_(regex) {
-
-	// 	parseContent(input);
-	// 	parseEntries();
-	// }
-
-	// Desired paramters and data body regex.
-	// fileReader(
-	// 	std::string input,
-	// 	std::vector<std::string> accept,
-	// 	std::vector<std::string> regex
-	// );
-
 	void setAcceptableParams(const std::vector<std::string>& params);
-
 	void setRegexArgs(const std::vector<std::string>& args);
 
 	// Operations Functions //
@@ -79,7 +56,7 @@ public:
 	// TODO: not finished.
 	//std::pair<bool, unsigned long> findInFile(std::string line);
 
-	// Todo: not finished.
+	// TODO: not finished.
 	//bool removeFromFile(std::string line);
 
 

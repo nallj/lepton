@@ -9,12 +9,14 @@ std::pair<unsigned, unsigned> getRegionAndModuleId(
 );
 
 template <typename TKey, typename TVal>
-bool keyInMap(const std::unordered_map<TKey, TVal> &map, const TKey &key);
+bool keyInMap(const std::unordered_map<TKey, TVal> &map, const TKey &key) {
+  return map.find(key) != map.end();
+}
 
 /* PUBLIC */
 
 allParamMaps parameterBuilder::collectAllParamMapsFromConfigFile(
-    const std::vector<std::string> &param_data
+  const std::vector<std::string> &param_data
 ) {
 
   allParamMaps all_params;
@@ -57,7 +59,10 @@ allParamMaps parameterBuilder::collectAllParamMapsFromConfigFile(
 
       // Parse as a RR parameter.
       parseRrParam(rr_param_position, param, arg, rr_params);
+      continue;
     }
+
+    // ADD OTHER (eg. PRIMITIVE)
   }
 
   // DEBUG MESSAGES
@@ -72,10 +77,10 @@ allParamMaps parameterBuilder::collectAllParamMapsFromConfigFile(
 /* PRIVATE */
 
 void parameterBuilder::parseIpParam(
-    std::size_t ip_param_position,
-    const std::string &param,
-    const std::string &arg,
-    ip_params_map_t &ip_params_map
+  std::size_t ip_param_position,
+  const std::string &param,
+  const std::string &arg,
+  ip_params_map_t &ip_params_map
 ) {
   std::size_t space_position = param.find(" ");
   std::string ip_id_string = param.substr(ip_param_position + 2, space_position - ip_param_position - 2);
@@ -236,9 +241,4 @@ std::pair<unsigned, unsigned> getRegionAndModuleId(
 
   // Return pair of IDs.
   return std::make_pair(region_id, module_id);
-}
-
-template <typename TKey, typename TVal>
-bool keyInMap(const std::unordered_map<TKey, TVal> &map, const TKey &key) {
-  return map.find(key) != map.end();
 }

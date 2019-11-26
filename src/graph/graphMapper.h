@@ -82,7 +82,8 @@ public:
     region_to_modules_map_t& available_sr_modules,
     region_to_modules_map_t& available_rr_modules,
     ip_to_capable_modules_map_t& ip_to_capable_modules_map,
-    moduleSelectionType module_selection_method
+    moduleSelectionType module_selection_method,
+    unsigned random_seed
   );
 };
 

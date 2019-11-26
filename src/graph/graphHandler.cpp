@@ -106,18 +106,9 @@ graphs_t graphHandler::formGraphsFromTgffFile(
 // TODO: Support user specified restrictions on which IPs may match with which task types.
 void graphHandler::markGraphTasksWithIps(
 	const graphs_t &graphs,
-	unsigned ip_count
+	unsigned ip_count,
+	unsigned random_seed
 ) {
-	// TODO: This should be derived from configuration parameters, otherwise set to 0.
-	bool use_time_as_random_seed = false;
-	unsigned random_seed;
-
-	if (use_time_as_random_seed) {
-		random_seed = (unsigned) time(0);
-	} else {
-		random_seed = 5762;
-	}
-
 	// Feed the seed to the pseudo-random number generator.
 	srand(random_seed);
 
